@@ -1,5 +1,5 @@
 "use client";
-import { useSession } from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -42,12 +42,22 @@ const navbar = () => {
         </div>
         <div className="flex gap-4">
           {session.data?.user ? (
-            <Link
-              href="/profile"
-              className="px-4 py-2 text-slate-300 hover:text-white transition"
-            >
-              {session.data.user.name}
-            </Link>
+            <>
+              <Link
+                href="/profile"
+                className="px-4 py-2 text-slate-300 hover:text-white transition"
+              >
+                {session.data.user.name}
+              </Link>
+              <button
+                onClick={async () => {
+                  await signOut();
+                }}
+                className="px-4 py-2 text-slate-300 hover:text-white transition"
+              >
+                Sign Out
+              </button>
+            </>
           ) : (
             <>
               <Link

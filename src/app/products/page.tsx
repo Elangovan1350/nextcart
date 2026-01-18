@@ -512,8 +512,8 @@ const Products = () => {
       </section>
 
       {/* Search and Filter Bar */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sticky top-20 bg-linear-to-b from-slate-900 via-slate-800 to-transparent z-40">
-        <div className="space-y-4 flex flex-col gap-2">
+      <section className="max-w-7xl mx-auto sticky top-15 z-30 px-4 sm:px-6 lg:px-8 py-8  bg-linear-to-b from-slate-900 via-slate-800 to-transparent ">
+        <div className=" flex flex-col gap-2">
           {/* Search */}
           <input
             type="text"
@@ -524,7 +524,7 @@ const Products = () => {
           />
 
           {/* Sort and Filter Controls */}
-          <div className="flex gap-4 justify-between items-center flex-wrap">
+          <div className="flex gap-4 justify-between items-center flex-nowrap">
             <div className="flex gap-2 items-center">
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -553,20 +553,21 @@ const Products = () => {
           </div>
 
           {/* Category Filter */}
+
           {showFilters && (
-            <div className="bg-amber-600 space">
+            <div className="grid md:grid-cols-5 lg:grid-cols-7 grid-cols-3 gap-4">
               {categories.map((category) => (
-                <button
+                <div
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg font-medium transition ${
+                  className={`px-4 py-2 rounded-lg font-medium transition whitespace-nowrap shrink-0 flex justify-center items-center ${
                     selectedCategory === category
                       ? "bg-blue-600 text-white"
                       : "bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500"
                   }`}
                 >
                   {category}
-                </button>
+                </div>
               ))}
             </div>
           )}
@@ -576,7 +577,7 @@ const Products = () => {
       {/* Products Grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {filteredProducts.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 sm:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2 gap-4">
             {filteredProducts.map((product) => (
               <div
                 key={product.id}
