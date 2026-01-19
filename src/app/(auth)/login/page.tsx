@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ShoppingCart, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const loginSchema = z.object({
   email: z.email(),
@@ -27,29 +27,6 @@ const login = () => {
 
   return (
     <div className="min-h-screen  bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
-      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <div className="space-y-4">
-              <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight">
-                Welcome Back to
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-400">
-                  {" "}
-                  NextCart
-                </span>
-              </h1>
-              <p className="text-xl text-slate-400">
-                Sign in to access your account, view orders, and enjoy exclusive
-                deals.
-              </p>
-            </div>
-          </div>
-          <div className="flex justify-center">
-            <div className="text-9xl animate-bounce">🔐</div>
-          </div>
-        </div>
-      </div> */}
-
       <section className="max-w-7xl  mx-auto  px-4 py-5 sm:px-6 lg:px-8 ">
         <div className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl p-8 md:p-12 w-full max-w-md mx-auto">
           <form
