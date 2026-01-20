@@ -40,7 +40,7 @@ const navbar = () => {
             Contact
           </Link>
         </div>
-        <div className="flex gap-4">
+        <div className="flex  flex-col sm:flex-row items-center">
           {session.data?.user ? (
             <>
               <Link

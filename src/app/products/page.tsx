@@ -89,7 +89,7 @@ const Products = () => {
       </section>
 
       {/* Search and Filter Bar */}
-      <section className="max-w-7xl mx-auto sticky top-15 z-30 px-4 sm:px-6 lg:px-8 py-8  bg-linear-to-b from-slate-900 via-slate-800 to-transparent ">
+      <section className="max-w-7xl mx-auto sticky top-15 z-30 px-4 sm:px-6 lg:px-8  py-14 sm:py-6  bg-linear-to-b from-slate-900 via-slate-800 to-transparent ">
         <div className=" flex flex-col gap-2">
           {/* Search */}
           <input
@@ -124,7 +124,7 @@ const Products = () => {
               <option value="reviews">Most Reviews</option>
             </select>
 
-            <div className="text-slate-300 text-sm">
+            <div className="text-slate-300 text-sm hidden md:block">
               {filteredProducts.length} products
             </div>
           </div>

@@ -2,6 +2,7 @@
 import axios from "axios";
 import { ArrowRight, ShoppingCart, Star } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 interface Product {
   id: number;
@@ -15,6 +16,7 @@ interface Product {
 }
 const featuredproducts = () => {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
+  const router = useRouter();
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await axios.get<Product[]>("/api/productshomepage");
@@ -37,6 +39,9 @@ const featuredproducts = () => {
         {featuredProducts.map((product) => (
           <div
             key={product.id}
+            onClick={() => {
+              router.push(`/products/${product.id}`);
+            }}
             className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition transform hover:scale-105"
           >
             <div className="bg-linear-to-br from-slate-700 to-slate-800 h-48 flex items-center justify-center text-7xl">
