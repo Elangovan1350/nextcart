@@ -86,6 +86,38 @@ const login = () => {
               {isLoading ? "Logging In..." : "Login"}
               {!isLoading && <ArrowRight className="w-5 h-5" />}
             </button>
+            <button
+              type="button"
+              className="w-full border-2 border-slate-600 hover:border-blue-400 text-white p-3 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={async () => {
+                setIsLoading(true);
+                const result = await signIn.social({
+                  provider: "github",
+                });
+                if (result.error) {
+                  toast.error(result.error.message);
+                  setIsLoading(false);
+                }
+              }}
+            >
+              Login with GitHub
+            </button>
+            <button
+              type="button"
+              className="w-full border-2 border-slate-600 hover:border-green-400 text-white p-3 rounded-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={async () => {
+                setIsLoading(true);
+                const result = await signIn.social({
+                  provider: "google",
+                });
+                if (result.error) {
+                  toast.error(result.error.message);
+                  setIsLoading(false);
+                }
+              }}
+            >
+              Login with Google
+            </button>
           </form>
           <div className="mt-6 pt-6 border-t border-slate-600 text-center">
             <p className="text-slate-300 mb-4">
