@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import axios from "axios";
 
 const contactFormSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -185,8 +186,11 @@ const Contact = () => {
             </div>
 
             <form
-              onSubmit={handleSubmit((data) => {
+              onSubmit={handleSubmit(async (data) => {
                 console.log("Form submitted:", data);
+                setSubmitted(true);
+                // Send email logic can be added here
+                axios.post("/api/contact", data);
               })}
               className="space-y-6"
             >

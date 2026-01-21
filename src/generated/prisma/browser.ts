@@ -47,3 +47,13 @@ export type Verification = Prisma.VerificationModel
  * 
  */
 export type Product = Prisma.ProductModel
+/**
+ * Model CartItem
+ * 
+ */
+export type CartItem = Prisma.CartItemModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel

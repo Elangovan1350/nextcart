@@ -40,9 +40,19 @@ export default function ProductPage({
   }, []);
 
   const handleAddToCart = () => {
-    setAddedToCart(true);
-    setTimeout(() => setAddedToCart(false), 2000);
-    console.log(`Added ${quantity} item(s) to cart`);
+    // Logic to add the product to the cart
+    try {
+      axios.post("/api/cart", {
+        productId: product?.id,
+        quantity,
+      });
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2000);
+
+      console.log(`Added ${quantity} item(s) to cart`);
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
   };
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
