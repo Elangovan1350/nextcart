@@ -152,7 +152,7 @@ const CartPage = () => {
             {/* Cart Items */}
             <div className="lg:col-span-2 space-y-4">
               {cartItems.map((item) => {
-                const product = products[item.productId];
+                const product = products[item.productId - 1];
                 if (!product) return null;
 
                 return (
