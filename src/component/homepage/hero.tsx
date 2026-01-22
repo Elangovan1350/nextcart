@@ -4,7 +4,7 @@ import Link from "next/link";
 const herosection = () => {
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-      <div className="grid md:grid-cols-2 gap-12 items-center">
+      <div className="grid md:grid-cols-2 gap-12  items-center">
         <div className="space-y-8">
           <div className="space-y-4">
             <h1 className="text-5xl md:text-6xl font-bold text-white leading-tight">
@@ -31,7 +31,7 @@ const herosection = () => {
             </button>
           </div>
         </div>
-        <div className="flex justify-center">
+        <div className="flex justify-center mt-12 md:mt-0">
           <div className="text-9xl animate-bounce">🛍️</div>
         </div>
       </div>

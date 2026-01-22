@@ -75,8 +75,11 @@ export async function POST(req: NextRequest) {
         quantity,
       },
     });
+    const cartItems = await prisma.cartItem.findMany({
+      where: { userId: session.user.id },
+    });
 
-    return NextResponse.json(cartItem, { status: 201 });
+    return NextResponse.json(cartItems, { status: 201 });
   } catch (error) {
     console.error("Error adding to cart:", error);
     return NextResponse.json(

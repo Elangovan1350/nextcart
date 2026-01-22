@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession } from "@/lib/auth-client";
+import useStore from "@/store/usestore";
 import axios from "axios";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -32,6 +33,7 @@ const CartPage = () => {
   const [products, setProducts] = useState<Record<number, Product>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState<number | null>(null);
+  const { setCart } = useStore();
 
   useEffect(() => {
     setTimeout(() => {
@@ -88,6 +90,8 @@ const CartPage = () => {
     try {
       await axios.delete(`/api/cart/${cartItemId}`);
       setCartItems(cartItems.filter((item) => item.id !== cartItemId));
+      const response = await axios.get("/api/cart");
+      setCart(response.data.length);
     } catch (error) {
       console.error("Error removing from cart:", error);
     }
@@ -161,25 +165,27 @@ const CartPage = () => {
                     className="bg-slate-800 rounded-2xl border border-slate-700 p-6 hover:border-slate-600 transition"
                   >
                     <div className="flex gap-6">
-                      {/* Product Image */}
-                      <div className="shrink-0 w-24 h-24 bg-slate-700 rounded-lg overflow-hidden">
-                        <div className="bg-linear-to-br from-slate-700 to-slate-800 h-full flex items-center justify-center text-6xl group-hover:scale-110 transition">
-                          {product.imageUrl}
+                      <div className="flex-1 flex flex-col sm:flex-row gap-6">
+                        {/* Product Image */}
+                        <div className="shrink-0 w-24 h-24 bg-slate-700 rounded-lg overflow-hidden">
+                          <div className="bg-linear-to-br from-slate-700 to-slate-800 h-full flex items-center justify-center text-6xl group-hover:scale-110 transition">
+                            {product.imageUrl}
+                          </div>
                         </div>
-                      </div>
 
-                      {/* Product Info */}
-                      <div className="flex-1 flex flex-col justify-between">
-                        <div>
-                          <h3 className="text-lg font-bold text-white mb-2">
-                            {product.name}
-                          </h3>
-                          <p className="text-slate-400 text-sm line-clamp-2">
-                            {product.description}
-                          </p>
-                        </div>
-                        <div className="text-blue-400 font-bold">
-                          ${product.price.toFixed(2)}
+                        {/* Product Info */}
+                        <div className="flex-1 flex flex-col justify-between">
+                          <div>
+                            <h3 className="text-lg font-bold text-white mb-2">
+                              {product.name}
+                            </h3>
+                            <p className="text-slate-400 text-sm line-clamp-2">
+                              {product.description}
+                            </p>
+                          </div>
+                          <div className="text-blue-400 font-bold">
+                            ${product.price.toFixed(2)}
+                          </div>
                         </div>
                       </div>
 

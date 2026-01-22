@@ -19,10 +19,12 @@ interface Product {
 const Products = () => {
   const router = useRouter();
   const [allProducts, setAllProducts] = useState<Product[]>([]);
+  const [Loading, setLoading] = useState(true);
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await axios.get<Product[]>("/api/products");
       setAllProducts(res.data);
+      setLoading(false);
     };
 
     fetchProducts();
@@ -89,7 +91,7 @@ const Products = () => {
       </section>
 
       {/* Search and Filter Bar */}
-      <section className="max-w-7xl mx-auto sticky top-15 z-30 px-4 sm:px-6 lg:px-8  py-14 sm:py-6  bg-linear-to-b from-slate-900 via-slate-800 to-transparent ">
+      <section className="max-w-7xl mx-auto sticky top-0 z-30 px-4 sm:px-6 lg:px-8  py-6   bg-linear-to-b from-slate-900 via-slate-800 to-transparent ">
         <div className=" flex flex-col gap-2">
           {/* Search */}
           <input
@@ -101,7 +103,7 @@ const Products = () => {
           />
 
           {/* Sort and Filter Controls */}
-          <div className="flex gap-4 justify-between items-center flex-nowrap">
+          <div className="flex gap-2 sm:gap-4 justify-between items-center flex-nowrap">
             <div className="flex gap-2 items-center">
               <button
                 onClick={() => setShowFilters(!showFilters)}
@@ -137,7 +139,7 @@ const Products = () => {
                 <div
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg font-medium transition whitespace-nowrap shrink-0 flex justify-center items-center ${
+                  className={`px-4 py-2 rounded-lg font-medium transition  shrink-0 flex justify-center items-center ${
                     selectedCategory === category
                       ? "bg-blue-600 text-white"
                       : "bg-slate-800 text-slate-300 hover:text-white border border-slate-700 hover:border-blue-500"
@@ -152,80 +154,88 @@ const Products = () => {
       </section>
 
       {/* Products Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {filteredProducts.length > 0 ? (
-          <div className="grid md:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2 gap-4">
-            {filteredProducts.map((product) => (
-              <div
-                onClick={() => {
-                  router.push(`/products/${product.id}`);
-                }}
-                key={product.id}
-                className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition transform hover:scale-105 group"
-              >
-                {/* Product Image */}
-                <div className="bg-linear-to-br from-slate-700 to-slate-800 h-40 flex items-center justify-center text-6xl group-hover:scale-110 transition">
-                  {product.imageUrl}
-                </div>
+      {Loading ? (
+        <div className="h-36 flex items-center justify-center bg-linear-to-b from-slate-900 via-slate-800 to-slate-900">
+          <p className="text-xl text-slate-400">Loading products...</p>
+        </div>
+      ) : (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {filteredProducts.length > 0 ? (
+            <div className="grid md:grid-cols-3 lg:grid-cols-4 sm:grid-cols-2 gap-4">
+              {filteredProducts.map((product) => (
+                <div
+                  onClick={() => {
+                    router.push(`/products/${product.id}`);
+                  }}
+                  key={product.id}
+                  className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-2xl overflow-hidden hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition transform hover:scale-105 group"
+                >
+                  {/* Product Image */}
+                  <div className="bg-linear-to-br from-slate-700 to-slate-800 h-40 flex items-center justify-center text-6xl group-hover:scale-110 transition">
+                    {product.imageUrl}
+                  </div>
 
-                {/* Product Info */}
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    <div className="flex-1">
-                      <h3 className="text-sm font-bold text-white line-clamp-2">
-                        {product.name}
-                      </h3>
-                      <p className="text-xs text-blue-400 mt-1">
-                        {product.category}
-                      </p>
+                  {/* Product Info */}
+                  <div className="p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="text-sm font-bold text-white line-clamp-2">
+                          {product.name}
+                        </h3>
+                        <p className="text-xs text-blue-400 mt-1">
+                          {product.category}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Description */}
+                    <p className="text-xs text-slate-400 line-clamp-2 mb-3">
+                      {product.description}
+                    </p>
+
+                    {/* Rating */}
+                    <div className="flex items-center gap-1 mb-3">
+                      <div className="flex text-yellow-400">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className="w-3 h-3 fill-current" />
+                        ))}
+                      </div>
+                      <span className="text-xs text-slate-400">
+                        {product.rating} ({product.reviews})
+                      </span>
+                    </div>
+
+                    {/* Price and Button */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-lg font-bold text-blue-400">
+                        {product.price}
+                      </span>
+                      <button className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition">
+                        <ShoppingCart className="w-4 h-4" />
+                      </button>
                     </div>
                   </div>
-
-                  {/* Description */}
-                  <p className="text-xs text-slate-400 line-clamp-2 mb-3">
-                    {product.description}
-                  </p>
-
-                  {/* Rating */}
-                  <div className="flex items-center gap-1 mb-3">
-                    <div className="flex text-yellow-400">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-current" />
-                      ))}
-                    </div>
-                    <span className="text-xs text-slate-400">
-                      {product.rating} ({product.reviews})
-                    </span>
-                  </div>
-
-                  {/* Price and Button */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-lg font-bold text-blue-400">
-                      {product.price}
-                    </span>
-                    <button className="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded-lg transition">
-                      <ShoppingCart className="w-4 h-4" />
-                    </button>
-                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-20">
-            <p className="text-2xl text-slate-400 mb-4">No products found</p>
-            <button
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedCategory("All");
-              }}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition"
-            >
-              Clear Filters
-            </button>
-          </div>
-        )}
-      </section>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-20">
+              <p className="text-2xl text-slate-400 mb-4">No products found</p>
+            </div>
+          )}
+        </section>
+      )}
+      <div className="flex justify-center items-center pb-12">
+        <button
+          onClick={() => {
+            setSearchTerm("");
+            setSelectedCategory("All");
+          }}
+          className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition"
+        >
+          Clear Filters
+        </button>
+      </div>
     </div>
   );
 };
