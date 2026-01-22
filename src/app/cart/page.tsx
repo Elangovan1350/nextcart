@@ -6,7 +6,8 @@ import axios from "axios";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
+import { set } from "zod";
 
 interface Product {
   id: number;
@@ -41,6 +42,7 @@ const CartPage = () => {
         // Fetch cart items
         const cartRes = await axios.get("/api/cart");
         setCartItems(cartRes.data);
+        setCart(cartRes.data.length);
 
         // Fetch all products
         const productsRes = await axios.get<Product[]>("/api/products");

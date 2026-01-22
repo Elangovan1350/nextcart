@@ -55,6 +55,7 @@ export default function ProductPage({
       setProduct(res.data);
       // setCartList(res2.data);
       setLoading(false);
+      setCartCount(res2.data.length);
 
       res2.data.forEach((item) => {
         if (item.productId == res.data.id) {
@@ -87,32 +88,37 @@ export default function ProductPage({
     res2.data.forEach((item) => {
       if (item.productId == product.id) {
         setCartLoading(false);
-
+        setCartCount(res2.data.length);
         setAddedToCart(true);
+
+        setAlreadyInCart(true);
         toast.error("This item is already in your cart.");
 
         console.log("item found in cart");
         return;
       }
     });
-
-    // Logic to add the product to the cart
-
+    if (alreadyInCart) {
+      return;
+    }
     try {
       const response = await axios.post("/api/cart", {
         productId: product?.id,
         quantity,
       });
       if (response.status === 201) {
+        setCartCount(response.data.length);
+
         setAddedToCart(true);
         setCartLoading(false);
       }
       console.log(response.data.length);
-      setCartCount(response.data.length);
       console.log(cart);
     } catch (error) {
       console.error("Error adding to cart:", error);
     }
+
+    // Logic to add the product to the cart
   };
 
   const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
