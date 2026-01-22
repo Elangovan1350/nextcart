@@ -8,7 +8,6 @@ import useStore from "@/store/usestore";
 
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
-import { log } from "node:console";
 
 interface Product {
   id: number;
@@ -47,12 +46,14 @@ export default function ProductPage({
   const [cartLoading, setCartLoading] = useState(false);
   const { setCart: setCartCount, cart } = useStore();
   const [alreadyInCart, setAlreadyInCart] = useState(false);
+  // const [cartList, setCartList] = useState<CartItem[]>([]);
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await axios.get<Product>(`/api/products/${id}`);
       const res2 = await axios.get<CartItem[]>("/api/cart");
 
       setProduct(res.data);
+      // setCartList(res2.data);
       setLoading(false);
 
       res2.data.forEach((item) => {
@@ -79,16 +80,32 @@ export default function ProductPage({
       toast.error("This item is already in your cart.");
       return;
     }
+    setAddedToCart(false);
     setCartLoading(true);
+
+    const res2 = await axios.get<CartItem[]>("/api/cart");
+    res2.data.forEach((item) => {
+      if (item.productId == product.id) {
+        setCartLoading(false);
+
+        setAddedToCart(true);
+        toast.error("This item is already in your cart.");
+
+        console.log("item found in cart");
+        return;
+      }
+    });
+
     // Logic to add the product to the cart
+
     try {
       const response = await axios.post("/api/cart", {
         productId: product?.id,
         quantity,
       });
       if (response.status === 201) {
-        setCartLoading(false);
         setAddedToCart(true);
+        setCartLoading(false);
       }
       console.log(response.data.length);
       setCartCount(response.data.length);
