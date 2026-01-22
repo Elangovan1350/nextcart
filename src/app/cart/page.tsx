@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "@/lib/auth-client";
+// import { useSession } from "@/lib/auth-client";
 import useStore from "@/store/usestore";
 import axios from "axios";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
@@ -27,13 +27,13 @@ interface CartItem {
 }
 
 const CartPage = () => {
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [products, setProducts] = useState<Record<number, Product>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState<number | null>(null);
-  const { setCart } = useStore();
+  const { setCart, session } = useStore();
 
   useEffect(() => {
     setTimeout(() => {

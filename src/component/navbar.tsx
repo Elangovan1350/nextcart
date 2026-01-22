@@ -6,16 +6,16 @@ import { ShoppingCart, Menu, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { set } from "zod";
 
 const navbar = () => {
   const router = useRouter();
   const session = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { cart: cartCount, setCart: setCartCount } = useStore();
+  const { cart: cartCount, setCart: setCartCount, setSession } = useStore();
   if (session.data?.user === null) {
     router.push("/login");
   }
+  setSession(session);
   useEffect(() => {
     if (!session.data?.user) return;
     const fetchCart = async () => {

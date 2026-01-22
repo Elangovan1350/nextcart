@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ShoppingCart, Heart, ArrowLeft, Star, Loader } from "lucide-react";
 import axios from "axios";
 import useStore from "@/store/usestore";
-import { log } from "console";
+import { toast } from "sonner";
 
 interface Product {
   id: number;
@@ -25,6 +25,7 @@ export default function ProductPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { session } = useStore();
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
   const [wishlist, setWishlist] = useState(false);
@@ -46,6 +47,12 @@ export default function ProductPage({
   }, []);
 
   const handleAddToCart = async () => {
+    if (!session) {
+      console.error("User not authenticated");
+      toast.error("Please log in to add items to your cart.");
+
+      return;
+    }
     setCartLoading(true);
     // Logic to add the product to the cart
     try {
