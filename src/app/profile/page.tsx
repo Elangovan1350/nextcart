@@ -59,7 +59,7 @@ const ProfilePage = () => {
         <div className="grid md:grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
           {/* Main Profile Info */}
           <div className="lg:col-span-2">
-            <div className="bg-slate-800 rounded-2xl border border-slate-700 p-8 hover:border-slate-600 transition">
+            <div className="bg-slate-800 rounded-2xl border border-slate-700 p-2 sm:p-8 hover:border-slate-600 transition">
               <h2 className="text-2xl font-bold text-white mb-8 flex items-center gap-3">
                 <User className="w-6 h-6 text-blue-400" />
                 Account Information
@@ -71,7 +71,7 @@ const ProfilePage = () => {
                   <label className="text-slate-300 font-semibold block mb-3">
                     Full Name
                   </label>
-                  <div className="px-4 py-3 bg-slate-700 rounded-lg border border-slate-600 text-white">
+                  <div className="px-2 sm:p-4 py-3 bg-slate-700 rounded-lg border border-slate-600 text-white">
                     {user.name || "Not provided"}
                   </div>
                 </div>
@@ -81,7 +81,7 @@ const ProfilePage = () => {
                   <label className="text-slate-300 font-semibold block mb-3">
                     Email Address
                   </label>
-                  <div className="px-4 py-3 bg-slate-700 rounded-lg border border-slate-600 text-white flex items-center gap-2">
+                  <div className="px-2 sm:p-4 py-3 bg-slate-700 rounded-lg border border-slate-600 text-white flex items-center gap-2">
                     <Mail className="w-5 h-5 text-blue-400" />
                     {user.email || "Not provided"}
                   </div>
@@ -92,7 +92,7 @@ const ProfilePage = () => {
                   <label className="text-slate-300 font-semibold block mb-3">
                     Email Verification Status
                   </label>
-                  <div className="px-4 py-3 bg-slate-700 rounded-lg border border-slate-600 flex items-center gap-2">
+                  <div className="px-2 sm:p-4 py-3 bg-slate-700 rounded-lg border border-slate-600 flex items-center gap-2">
                     <Shield className="w-5 h-5" />
                     <span
                       className={
