@@ -6,6 +6,7 @@ import { ShoppingCart, Menu, MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { set } from "zod";
 
 const navbar = () => {
   const router = useRouter();
@@ -55,8 +56,8 @@ const navbar = () => {
         </div>
         <div className="sm:hidden">
           <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="text-slate-300 hover:text-white transition"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             <MenuIcon className="w-6 h-6" />
           </button>
@@ -70,15 +71,15 @@ const navbar = () => {
               >
                 {session.data.user.name}
               </Link>
-              <button
-                onClick={() => router.push("/cart")}
+              <Link
+                href="/cart"
                 className=" text-slate-300 hover:text-white transition relative"
               >
                 Cart
                 <span className="bg-blue-500 text-white rounded-full px-2 py-1 ml-2 absolute -top-3 -right-6 text-xs">
                   {cartCount}
                 </span>
-              </button>
+              </Link>
             </>
           ) : (
             <>
@@ -106,21 +107,23 @@ const navbar = () => {
                 <Link
                   href="/profile"
                   className="block  text-slate-300 hover:text-white transition"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   {session.data.user.name}
                 </Link>
               </div>
 
               <div className="w-full flex justify-center  hover:ring-1 ring-inset ring-slate-700 py-2">
-                <button
-                  onClick={() => router.push("/cart")}
+                <Link
+                  href="/cart"
                   className="block  text-slate-300 hover:text-white transition relative"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Cart
                   <span className="bg-blue-500 text-white rounded-full px-2 py-1 ml-2 absolute -top-3 -right-6 text-xs">
                     {cartCount}
                   </span>
-                </button>
+                </Link>
               </div>
             </>
           ) : (
@@ -129,6 +132,7 @@ const navbar = () => {
                 <Link
                   href="/login"
                   className="block  text-slate-300 hover:text-white transition"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
@@ -137,6 +141,7 @@ const navbar = () => {
                 <Link
                   href="/signup"
                   className="block  text-slate-300 hover:text-white transition"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Sign Up
                 </Link>
@@ -147,6 +152,7 @@ const navbar = () => {
             <Link
               href="/products"
               className="block  text-slate-300 hover:text-white transition"
+              onClick={() => setIsMenuOpen(false)}
             >
               Products
             </Link>
@@ -155,6 +161,7 @@ const navbar = () => {
             <Link
               href="/about"
               className="block  text-slate-300 hover:text-white transition"
+              onClick={() => setIsMenuOpen(false)}
             >
               About
             </Link>
@@ -163,6 +170,7 @@ const navbar = () => {
             <Link
               href="/contact"
               className="block  text-slate-300 hover:text-white transition"
+              onClick={() => setIsMenuOpen(false)}
             >
               Contact
             </Link>
@@ -172,6 +180,8 @@ const navbar = () => {
               className="w-full group flex justify-center hover:ring-1 ring-inset ring-slate-700  py-2"
               onClick={async () => {
                 await signOut();
+                router.push("/");
+                setIsMenuOpen(false);
               }}
             >
               <button className="block group-hover:text-red-500 text-red-300  transition">
