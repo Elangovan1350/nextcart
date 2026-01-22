@@ -100,11 +100,12 @@ model Product {
 }
 
 model CartItem {
-  id        Int      @id @default(autoincrement())
+  id        Int    @id @default(autoincrement())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   productId Int
-  quantity  Int      @default(1)
+  quantity  Int    @default(1)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

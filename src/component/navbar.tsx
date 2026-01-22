@@ -11,11 +11,11 @@ const navbar = () => {
   const router = useRouter();
   const session = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { cart: cartCount, setCart: setCartCount, setSession } = useStore();
+  const { cart: cartCount, setCart: setCartCount } = useStore();
   if (session.data?.user === null) {
     router.push("/login");
   }
-  setSession(session);
+
   useEffect(() => {
     if (!session.data?.user) return;
     const fetchCart = async () => {

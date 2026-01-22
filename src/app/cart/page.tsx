@@ -1,6 +1,6 @@
 "use client";
 
-// import { useSession } from "@/lib/auth-client";
+import { useSession } from "@/lib/auth-client";
 import useStore from "@/store/usestore";
 import axios from "axios";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
@@ -27,22 +27,15 @@ interface CartItem {
 }
 
 const CartPage = () => {
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [products, setProducts] = useState<Record<number, Product>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState<number | null>(null);
-  const { setCart, session } = useStore();
+  const { setCart } = useStore();
 
   useEffect(() => {
-    setTimeout(() => {
-      if (!session) {
-        router.push("/login");
-        return;
-      }
-    }, 2000);
-
     const fetchData = async () => {
       try {
         // Fetch cart items
@@ -51,13 +44,7 @@ const CartPage = () => {
 
         // Fetch all products
         const productsRes = await axios.get<Product[]>("/api/products");
-        // const productsMap = productsRes.data.reduce(
-        //   (acc, product) => {
-        //     acc[product.id] = product;
-        //     return acc;
-        //   },
-        //   {} as Record<number, Product>,
-        // );
+
         setProducts(productsRes.data);
       } catch (error) {
         console.error("Error fetching cart data:", error);

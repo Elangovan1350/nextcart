@@ -5,7 +5,10 @@ import Link from "next/link";
 import { ShoppingCart, Heart, ArrowLeft, Star, Loader } from "lucide-react";
 import axios from "axios";
 import useStore from "@/store/usestore";
+
 import { toast } from "sonner";
+import { useSession } from "@/lib/auth-client";
+import { log } from "node:console";
 
 interface Product {
   id: number;
@@ -19,13 +22,22 @@ interface Product {
   createdAt: string;
   updatedAt: string;
 }
+interface CartItem {
+  id: number;
+  userId: string;
+  productId: number;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+}
 
 export default function ProductPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { session } = useStore();
+  const session = useSession();
+  // const { session } = useStore();
   const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
   const [wishlist, setWishlist] = useState(false);
@@ -34,23 +46,37 @@ export default function ProductPage({
   const [loading, setLoading] = useState(true);
   const [cartLoading, setCartLoading] = useState(false);
   const { setCart: setCartCount, cart } = useStore();
+  const [alreadyInCart, setAlreadyInCart] = useState(false);
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await axios.get<Product>(`/api/products/${id}`);
-      console.log(res);
+      const res2 = await axios.get<CartItem[]>("/api/cart");
 
       setProduct(res.data);
       setLoading(false);
+
+      res2.data.forEach((item) => {
+        if (item.productId == res.data.id) {
+          setAddedToCart(true);
+          setAlreadyInCart(true);
+          console.log("item found in cart");
+        }
+      });
     };
 
     fetchProducts();
   }, []);
 
   const handleAddToCart = async () => {
-    if (!session) {
-      console.error("User not authenticated");
+    if (session.data === null) {
+      console.log("User not authenticated");
+
       toast.error("Please log in to add items to your cart.");
 
+      return;
+    }
+    if (alreadyInCart) {
+      toast.error("This item is already in your cart.");
       return;
     }
     setCartLoading(true);
@@ -188,6 +214,7 @@ export default function ProductPage({
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <button
                   onClick={handleAddToCart}
+                  disabled={cartLoading}
                   className={`flex-1 py-4 px-6 rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105 ${
                     addedToCart
                       ? "bg-green-600 hover:bg-green-700 text-white"
