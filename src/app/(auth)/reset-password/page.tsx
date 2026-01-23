@@ -3,7 +3,7 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useEffect, useState, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -42,11 +42,7 @@ const ResetPasswordComponent = () => {
   const token = searchParams.get("token");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  //   const [token, setToken] = useState<string | null>(null);
 
-  //   useEffect(() => {
-  //     setToken(searchParams.get("token"));
-  //   }, [searchParams]);
   const {
     register,
     handleSubmit,

@@ -32,7 +32,7 @@ const ForgotPasswordPage = () => {
         { email: data.email, redirectTo: "/reset-password" },
         {
           onSuccess: () => {
-            toast.success("Reset link send to your email");
+            toast.success("Password reset link sent to your email!");
           },
           onError: (ctx) => {
             // Handle the error
@@ -41,7 +41,6 @@ const ForgotPasswordPage = () => {
         },
       );
 
-      toast.success("Password reset link sent to your email!");
       setIsSubmitted(true);
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
