@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ShoppingCart, Heart, ArrowLeft, Star, Loader } from "lucide-react";
 import axios from "axios";
 import useStore from "@/store/usestore";
-
 import { toast } from "sonner";
 import { useSession } from "@/lib/auth-client";
 
@@ -36,8 +35,6 @@ export default function ProductPage({
   params: Promise<{ id: string }>;
 }) {
   const session = useSession();
-  // const { session } = useStore();
-  const [quantity, setQuantity] = useState(1);
   const [addedToCart, setAddedToCart] = useState(false);
   const [wishlist, setWishlist] = useState(false);
   const { id } = use(params);
@@ -46,14 +43,12 @@ export default function ProductPage({
   const [cartLoading, setCartLoading] = useState(false);
   const { setCart: setCartCount, cart } = useStore();
   const [alreadyInCart, setAlreadyInCart] = useState(false);
-  // const [cartList, setCartList] = useState<CartItem[]>([]);
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await axios.get<Product>(`/api/products/${id}`);
       const res2 = await axios.get<CartItem[]>("/api/cart");
 
       setProduct(res.data);
-      // setCartList(res2.data);
       setLoading(false);
       setCartCount(res2.data.length);
 
@@ -84,45 +79,40 @@ export default function ProductPage({
     setAddedToCart(false);
     setCartLoading(true);
 
-    const res2 = await axios.get<CartItem[]>("/api/cart");
-    res2.data.forEach((item) => {
-      if (item.productId == product.id) {
-        setCartLoading(false);
-        setCartCount(res2.data.length);
-        setAddedToCart(true);
+    const cartList = await axios.get<CartItem[]>("/api/cart");
+    const findItem = cartList.data.some((item) => item.productId == product.id);
+    if (findItem) {
+      setCartLoading(false);
+      setCartCount(cartList.data.length);
+      setAddedToCart(true);
 
-        setAlreadyInCart(true);
-        toast.error("This item is already in your cart.");
+      setAlreadyInCart(true);
+      toast.error("This item is already in your cart.");
 
-        console.log("item found in cart");
-        return;
-      }
-    });
-    if (alreadyInCart) {
+      console.log("item found in cart");
       return;
     }
+
     try {
       const response = await axios.post("/api/cart", {
         productId: product?.id,
-        quantity,
+        quantity: 1,
       });
       if (response.status === 201) {
         setCartCount(response.data.length);
-
-        setAddedToCart(true);
         setCartLoading(false);
+        setAddedToCart(true);
       }
       console.log(response.data.length);
       console.log(cart);
     } catch (error) {
       console.error("Error adding to cart:", error);
+    } finally {
+      setCartLoading(false);
     }
 
-    // Logic to add the product to the cart
-  };
-
-  const handleQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setQuantity(Math.max(1, parseInt(e.target.value) || 1));
+    toast.success("Product added to cart!");
+    return;
   };
 
   return (
@@ -169,7 +159,6 @@ export default function ProductPage({
                   {product.category}
                 </span>
               </div>
-
               {/* Product Name */}
               <div className="space-y-4">
                 <h1 className="text-3xl md:text-4xl font-bold text-white leading-tight">
@@ -198,7 +187,6 @@ export default function ProductPage({
                   </span>
                 </div>
               </div>
-
               {/* Price */}
               <div className="space-y-2 border-t border-b border-slate-700 py-6">
                 <div className="text-3xl font-bold text-transparent bg-clip-text bg-linear-to-r from-blue-400 to-cyan-400">
@@ -206,7 +194,6 @@ export default function ProductPage({
                 </div>
                 <p className="text-slate-400">Inclusive of all taxes</p>
               </div>
-
               {/* Description */}
               <div className="space-y-3">
                 <h2 className="text-base font-semibold text-white">
@@ -216,9 +203,8 @@ export default function ProductPage({
                   {product.description}
                 </p>
               </div>
-
-              {/* Quantity Selector */}
-              <div className="flex items-center gap-4">
+              /{/* Quantity Selector */}
+              {/* <div className="flex items-center gap-4">
                 <label htmlFor="quantity" className="font-semibold text-white">
                   Quantity:
                 </label>
@@ -231,8 +217,7 @@ export default function ProductPage({
                   onChange={handleQuantityChange}
                   className="w-24 px-4 py-2 bg-slate-700 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
-              </div>
-
+              </div> */}
               {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <button
@@ -268,7 +253,6 @@ export default function ProductPage({
                   />
                 </button>
               </div>
-
               {/* Product Info */}
               <div className="bg-slate-800 bg-opacity-50 backdrop-blur border border-slate-700 rounded-xl p-6 space-y-3">
                 <div className="flex justify-between">
