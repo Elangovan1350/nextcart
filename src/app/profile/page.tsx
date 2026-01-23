@@ -1,9 +1,10 @@
 "use client";
 
-import { useSession, signOut } from "@/lib/auth-client";
+import { useSession, signOut, sendVerificationEmail } from "@/lib/auth-client";
 import { LogOut, Mail, User, Shield } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const ProfilePage = () => {
   const { data: session } = useSession();
@@ -92,7 +93,25 @@ const ProfilePage = () => {
                   <label className="text-slate-300 font-semibold block mb-3">
                     Email Verification Status
                   </label>
-                  <div className="px-2 sm:p-4 py-3 bg-slate-700 rounded-lg border border-slate-600 flex items-center gap-2">
+                  <div
+                    className="px-2 sm:p-4 py-3 bg-slate-700 rounded-lg border border-slate-600 flex items-center gap-2"
+                    onClick={() =>
+                      sendVerificationEmail(
+                        {
+                          email: user.email,
+                          callbackURL: "/profile",
+                        },
+                        {
+                          onSuccess: () => {
+                            toast.success("Verification email sent!");
+                          },
+                          onError: () => {
+                            toast.error("Failed to send verification email.");
+                          },
+                        },
+                      )
+                    }
+                  >
                     <Shield className="w-5 h-5" />
                     <span
                       className={
