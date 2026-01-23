@@ -129,6 +129,22 @@ const login = () => {
                 Sign Up
               </Link>
             </p>
+            <p>
+              <Link
+                href="/forgot-password"
+                className="text-blue-400 hover:text-blue-300 font-semibold transition"
+              >
+                Forgot Password?
+              </Link>
+            </p>
+            <p>
+              <Link
+                href="/"
+                className="text-blue-400 hover:text-blue-300 font-semibold transition"
+              >
+                Back to Home
+              </Link>
+            </p>
           </div>
         </div>
       </section>

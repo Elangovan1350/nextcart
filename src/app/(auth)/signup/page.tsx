@@ -11,6 +11,7 @@ import Link from "next/link";
 const signUpSchema = z.object({
   email: z.email(),
   password: z.string().min(8).max(20),
+  confirmPassword: z.string().min(8).max(20),
   name: z.string().min(2).max(100),
 });
 type SignUpData = z.infer<typeof signUpSchema>;
@@ -46,6 +47,11 @@ export default function SignUpPage() {
             <form
               onSubmit={handleSubmit(async (data) => {
                 setIsLoading(true);
+                if (data.password !== data.confirmPassword) {
+                  toast.error("Passwords do not match");
+                  setIsLoading(false);
+                  return;
+                }
                 const result = await signUp.email({
                   email: data.email,
                   password: data.password,
@@ -112,6 +118,23 @@ export default function SignUpPage() {
                   </p>
                 )}
               </div>
+              <div>
+                <label className="block mb-2 font-semibold text-slate-200">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  {...register("confirmPassword")}
+                  className="w-full bg-slate-700/50 border border-slate-600 text-white p-3 rounded-lg focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition placeholder-slate-400"
+                  placeholder="Re-enter your password"
+                  disabled={isLoading}
+                />
+                {errors.confirmPassword && (
+                  <p className="text-red-400 text-sm mt-1">
+                    {errors.confirmPassword.message}
+                  </p>
+                )}
+              </div>
               <button
                 type="submit"
                 className="w-full bg-linear-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white p-3 rounded-lg font-semibold transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 mt-6"
@@ -125,6 +148,7 @@ export default function SignUpPage() {
                 disabled={isLoading}
                 onClick={async () => {
                   setIsLoading(true);
+
                   const result = await signIn.social({
                     provider: "github",
                   });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession, signOut, sendVerificationEmail } from "@/lib/auth-client";
-import { LogOut, Mail, User, Shield } from "lucide-react";
+import { LogOut, Mail, User, Shield, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -146,20 +146,14 @@ const ProfilePage = () => {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* Stats Card */}
-            {/* <div className="bg-linear-to-br from-blue-600 to-blue-700 rounded-2xl p-8 text-white">
-              <h3 className="text-lg font-bold mb-4">Account Status</h3>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-200">Member Since</span>
-                  <span className="font-semibold">Today</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-200">Status</span>
-                  <span className="font-semibold text-green-300">Active</span>
-                </div>
-              </div>
-            </div> */}
+            {/* Change Password Button */}
+            <button
+              onClick={() => router.push("/change-password")}
+              className="w-full px-6 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold flex items-center justify-center gap-2 transition transform hover:scale-105"
+            >
+              <Lock className="w-5 h-5" />
+              Change Password
+            </button>
 
             {/* Sign Out Button */}
             <button

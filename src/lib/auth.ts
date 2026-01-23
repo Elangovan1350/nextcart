@@ -13,7 +13,24 @@ const transporter = nodemailer.createTransport({
 export const auth = betterAuth({
   emailAndPassword: {
     enabled: true,
+    sendResetPassword: async ({ user, url }) => {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "Reset your password",
+        text: `Click the link to reset your password: ${url}`,
+      });
+    },
+    onPasswordReset: async ({ user }) => {
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: user.email,
+        subject: "Your password has been reset",
+        text: `Your password has been successfully reset.`,
+      });
+    },
   },
+
   emailVerification: {
     sendOnSignIn: true,
 
@@ -32,6 +49,7 @@ export const auth = betterAuth({
       });
     },
   },
+
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
