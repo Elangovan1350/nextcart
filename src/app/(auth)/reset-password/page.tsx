@@ -1,9 +1,9 @@
-export const dynamic = "force-dynamic";
+"use client";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -25,9 +25,18 @@ type ResetPasswordData = z.infer<typeof resetPasswordSchema>;
 const ResetPasswordPage = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  //   const token = searchParams.get("token");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    setToken(searchParams.get("token"));
+
+    if (!token) {
+      toast.error("Invalid reset link");
+    }
+  }, [searchParams, token]);
   const {
     register,
     handleSubmit,
