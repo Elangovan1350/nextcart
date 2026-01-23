@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader } from "lucide-react";
 import { resetPassword } from "@/lib/auth-client";
 
 const resetPasswordSchema = z
@@ -29,9 +29,11 @@ const ResetPasswordPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [token, setToken] = useState<string | null>(null);
+  const [tokenChecked, setTokenChecked] = useState(false);
 
   useEffect(() => {
     setToken(searchParams.get("token"));
+    setTokenChecked(true);
   }, [searchParams]);
   const {
     register,
@@ -68,6 +70,19 @@ const ResetPasswordPage = () => {
       setIsLoading(false);
     }
   };
+  if (!tokenChecked) {
+    return (
+      <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col justify-center items-center px-4 pb-10">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500">
+          <Loader className="h-52 w-52" />
+        </div>
+      </div>
+    ); // or a loading spinner
+  }
+
+  if (tokenChecked && !token) {
+    toast.error("Invalid reset link");
+  }
 
   if (!token) {
     return (
