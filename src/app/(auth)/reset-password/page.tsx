@@ -32,11 +32,7 @@ const ResetPasswordPage = () => {
 
   useEffect(() => {
     setToken(searchParams.get("token"));
-
-    if (!token) {
-      toast.error("Invalid reset link");
-    }
-  }, [searchParams, token]);
+  }, [searchParams]);
   const {
     register,
     handleSubmit,
