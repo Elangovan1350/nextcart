@@ -55,20 +55,20 @@ export default function ProductPage({
         setLoading(false);
 
         return;
-      } else {
-        const res2 = await axios.get<CartItem[]>("/api/cart");
-        setCartlist(res2.data);
-        setLoading(false);
-        setCartCount(res2.data.length);
-
-        res2.data.forEach((item) => {
-          if (item.productId == res.data.id) {
-            setAddedToCart(true);
-            setAlreadyInCart(true);
-            console.log("item found in cart");
-          }
-        });
       }
+
+      const res2 = await axios.get<CartItem[]>("/api/cart");
+      setCartlist(res2.data);
+      setLoading(false);
+      setCartCount(res2.data.length);
+
+      res2.data.forEach((item) => {
+        if (item.productId == res.data.id) {
+          setAddedToCart(true);
+          setAlreadyInCart(true);
+          console.log("item found in cart");
+        }
+      });
     };
 
     fetchProducts();
@@ -86,15 +86,9 @@ export default function ProductPage({
       toast.error("This item is already in your cart.");
       return;
     }
-    setAddedToCart(false);
-    setCartLoading(true);
-
-    // const cartList = await axios.get<CartItem[]>("/api/cart");
     const findItem = cartlist.some((item) => item.productId == product.id);
     if (findItem) {
-      setCartLoading(false);
       setCartCount(cartlist.length);
-      setAddedToCart(true);
 
       setAlreadyInCart(true);
       toast.error("This item is already in your cart.");
@@ -102,6 +96,11 @@ export default function ProductPage({
       console.log("item found in cart");
       return;
     }
+
+    setAddedToCart(false);
+    setCartLoading(true);
+
+    // const cartList = await axios.get<CartItem[]>("/api/cart");
 
     try {
       const response = await axios.post("/api/cart", {

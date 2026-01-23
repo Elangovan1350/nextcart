@@ -44,6 +44,7 @@ const CartPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isUpdating, setIsUpdating] = useState<boolean>(false);
   const [deleting, setDeleting] = useState<boolean>(false);
+  const [deletingId, setDeletingId] = useState<number | null>(null);
   const { setCart } = useStore();
 
   useEffect(() => {
@@ -91,7 +92,9 @@ const CartPage = () => {
   };
 
   const removeFromCart = async (cartItemId: number) => {
+    setDeletingId(cartItemId);
     setDeleting(true);
+
     try {
       await axios.delete(`/api/cart/${cartItemId}`);
       setCartItems(cartItems.filter((item) => item.id !== cartItemId));
@@ -208,7 +211,7 @@ const CartPage = () => {
                           className="p-2 hover:bg-red-600/20 text-red-400 rounded-lg transition"
                           title="Remove from cart"
                         >
-                          {deleting ? (
+                          {deleting && deletingId === item.id ? (
                             <Loader className="w-5 h-5 animate-spin" />
                           ) : (
                             <Trash2 className="w-5 h-5" />

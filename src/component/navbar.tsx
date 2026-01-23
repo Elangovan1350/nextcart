@@ -12,18 +12,15 @@ const navbar = () => {
   const session = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { cart: cartCount, setCart: setCartCount } = useStore();
-  if (session.data?.user === null) {
-    router.push("/login");
-  }
 
   useEffect(() => {
-    if (!session.data?.user) return;
+    if (!session.data) return;
     const fetchCart = async () => {
       const res = await axios.get("/api/cart");
       setCartCount(res.data.length);
     };
     fetchCart();
-  }, [session.data?.user]);
+  }, [session.data, setCartCount]);
   return (
     <nav className="bg-slate-950 bg-opacity-80 backdrop-blur-md border-b border-slate-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
