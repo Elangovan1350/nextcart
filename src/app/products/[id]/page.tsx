@@ -46,19 +46,27 @@ export default function ProductPage({
   useEffect(() => {
     const fetchProducts = async () => {
       const res = await axios.get<Product>(`/api/products/${id}`);
-      const res2 = await axios.get<CartItem[]>("/api/cart");
-
       setProduct(res.data);
-      setLoading(false);
-      setCartCount(res2.data.length);
 
-      res2.data.forEach((item) => {
-        if (item.productId == res.data.id) {
-          setAddedToCart(true);
-          setAlreadyInCart(true);
-          console.log("item found in cart");
-        }
-      });
+      if (!session.data) {
+        console.log("User not authenticated");
+        setLoading(false);
+
+        return;
+      } else {
+        const res2 = await axios.get<CartItem[]>("/api/cart");
+
+        setLoading(false);
+        setCartCount(res2.data.length);
+
+        res2.data.forEach((item) => {
+          if (item.productId == res.data.id) {
+            setAddedToCart(true);
+            setAlreadyInCart(true);
+            console.log("item found in cart");
+          }
+        });
+      }
     };
 
     fetchProducts();

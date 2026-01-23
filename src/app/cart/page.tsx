@@ -3,11 +3,20 @@
 import { useSession } from "@/lib/auth-client";
 import useStore from "@/store/usestore";
 import axios from "axios";
-import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
+import {
+  Trash2,
+  Plus,
+  Minus,
+  ShoppingBag,
+  ArrowRight,
+  Loader,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { set } from "zod";
+import { fi } from "zod/v4/locales";
 
 interface Product {
   id: number;
@@ -33,10 +42,16 @@ const CartPage = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [products, setProducts] = useState<Record<number, Product>>({});
   const [isLoading, setIsLoading] = useState(true);
-  const [isUpdating, setIsUpdating] = useState<number | null>(null);
+  const [isUpdating, setIsUpdating] = useState<boolean>(false);
+  const [deleting, setDeleting] = useState<boolean>(false);
   const { setCart } = useStore();
 
   useEffect(() => {
+    if (!session) {
+      router.push("/login");
+      return;
+    }
+
     const fetchData = async () => {
       try {
         // Fetch cart items
@@ -60,7 +75,7 @@ const CartPage = () => {
 
   const updateQuantity = async (cartItemId: number, newQuantity: number) => {
     if (newQuantity < 1) return;
-    setIsUpdating(cartItemId);
+    setIsUpdating(true);
     try {
       await axios.patch(`/api/cart/${cartItemId}`, { quantity: newQuantity });
       setCartItems(
@@ -71,18 +86,21 @@ const CartPage = () => {
     } catch (error) {
       console.error("Error updating cart:", error);
     } finally {
-      setIsUpdating(null);
+      setIsUpdating(false);
     }
   };
 
   const removeFromCart = async (cartItemId: number) => {
+    setDeleting(true);
     try {
       await axios.delete(`/api/cart/${cartItemId}`);
       setCartItems(cartItems.filter((item) => item.id !== cartItemId));
-      const response = await axios.get("/api/cart");
-      setCart(response.data.length);
+      setCart(cartItems.length - 1);
     } catch (error) {
       console.error("Error removing from cart:", error);
+    } finally {
+      setDeleting(false);
+      toast.success("Item removed from cart");
     }
   };
 
@@ -97,8 +115,10 @@ const CartPage = () => {
     return (
       <div className="min-h-screen bg-linear-to-b from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin text-4xl mb-4">🛒</div>
-          <p className="text-slate-400">Loading your cart...</p>
+          <div className="animate-bounce text-4xl mb-4">🛒</div>
+          <p className="text-slate-400 flex items-center justify-center gap-2">
+            <Loader className="animate-spin" /> Loading your cart...
+          </p>
         </div>
       </div>
     );
@@ -154,7 +174,10 @@ const CartPage = () => {
                     className="bg-slate-800 rounded-2xl border border-slate-700 p-6 hover:border-slate-600 transition"
                   >
                     <div className="flex gap-6">
-                      <div className="flex-1 flex flex-col sm:flex-row gap-6">
+                      <div
+                        className="flex-1 flex flex-col sm:flex-row gap-6"
+                        onClick={() => router.push(`/products/${product.id}`)}
+                      >
                         {/* Product Image */}
                         <div className="shrink-0 w-24 h-24 bg-slate-700 rounded-lg overflow-hidden">
                           <div className="bg-linear-to-br from-slate-700 to-slate-800 h-full flex items-center justify-center text-6xl group-hover:scale-110 transition">
@@ -185,7 +208,11 @@ const CartPage = () => {
                           className="p-2 hover:bg-red-600/20 text-red-400 rounded-lg transition"
                           title="Remove from cart"
                         >
-                          <Trash2 className="w-5 h-5" />
+                          {deleting ? (
+                            <Loader className="w-5 h-5 animate-spin" />
+                          ) : (
+                            <Trash2 className="w-5 h-5" />
+                          )}
                         </button>
 
                         <div className="flex items-center gap-3 bg-slate-700 rounded-lg p-2">
@@ -193,9 +220,7 @@ const CartPage = () => {
                             onClick={() =>
                               updateQuantity(item.id, item.quantity - 1)
                             }
-                            disabled={
-                              isUpdating === item.id || item.quantity <= 1
-                            }
+                            disabled={item.quantity <= 1 || isUpdating}
                             className="p-1 hover:bg-slate-600 rounded disabled:opacity-50"
                           >
                             <Minus className="w-4 h-4 text-slate-300" />
@@ -207,7 +232,7 @@ const CartPage = () => {
                             onClick={() =>
                               updateQuantity(item.id, item.quantity + 1)
                             }
-                            disabled={isUpdating === item.id}
+                            disabled={item.quantity > 10 || isUpdating}
                             className="p-1 hover:bg-slate-600 rounded disabled:opacity-50"
                           >
                             <Plus className="w-4 h-4 text-slate-300" />
